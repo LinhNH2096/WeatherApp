@@ -6,25 +6,21 @@
 //
 
 import SwiftUI
+import WeatherKit
 
 struct ContentView: View {
     @State var isNight: Bool = false
     var body: some View {
         ZStack {
-            BackgroundView(isNight: $isNight)
+            BackgroundView(isNight: isNight)
             VStack {
                 CityTextView(cityName: "Da Nang, VN")
                 MainWeatherStatusView(imageName: isNight ? "moon.stars.fill" : "cloud.sun.fill",
                                       temperature: 25)
 
-                HStack(spacing: 24) {
-                    let moke = WeatherInDay(dayOfWeek: "MON", weatherImageName: "cloud.sun.fill", temperature: 23)
-                    WeatherDayView(weatherInDay: moke)
-                    WeatherDayView(weatherInDay: moke)
-                    WeatherDayView(weatherInDay: moke)
-                    WeatherDayView(weatherInDay: moke)
-                    WeatherDayView(weatherInDay: moke)
-                }
+                let moke = WeatherInDay(id: Date(), weatherImageName: "cloud.sun.fill", temperature: 23)
+                let mokeArray = Array(repeating: moke, count: 5)
+                HorizontalListWeatherDayView(weatherList: mokeArray)
 
                 Spacer()
                 
@@ -36,7 +32,6 @@ struct ContentView: View {
 
                 Spacer()
             }
-
         }
     }
 }
@@ -44,6 +39,21 @@ struct ContentView: View {
 struct ContentView_Preview: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+
+struct HorizontalListWeatherDayView: View {
+    var weatherList: [WeatherInDay]
+
+    var body: some View {
+        ScrollView(.horizontal) {
+            HStack(alignment: .center, spacing: 25) {
+                Spacer()
+                ForEach(weatherList) { weatherInDay in
+                    WeatherDayView(weatherInDay: weatherInDay)
+                }
+            }
+        }
     }
 }
 
@@ -68,14 +78,17 @@ struct WeatherDayView: View {
     }
 }
 
-struct WeatherInDay {
-    var dayOfWeek: String
+struct WeatherInDay: Identifiable {
+    var id: Date
+    var dayOfWeek: String {
+        return id.formatted(Date.FormatStyle().weekday())
+    }
     var weatherImageName: String
     var temperature: Int
 }
 
 struct BackgroundView: View {
-    @Binding var isNight: Bool
+    var isNight: Bool
     var body: some View {
 
         let topColor: Color = isNight ? .black : .blue
@@ -111,7 +124,6 @@ struct MainWeatherStatusView: View {
             Text("\(temperature)°")
                 .font(.system(size: 70, weight: .medium, design: .rounded))
                 .foregroundColor(.blue)
-            
         }.padding(.bottom, 40)
     }
 }
