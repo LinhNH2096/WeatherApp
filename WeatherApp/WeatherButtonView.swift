@@ -12,8 +12,15 @@ struct WeatherButtonView: View {
     var body: some View {
         Text(title)
             .frame(width: 280, height: 56)
-            .background(Color.white)
+            .background(Color.blue)
+            .foregroundColor(Color.white)
             .font(.system(size: 20, weight: .bold, design: .rounded))
             .cornerRadius(12)
+    }
+}
+
+struct WeatherButtonView_Preview: PreviewProvider {
+    static var previews: some View {
+        WeatherButtonView(title: "Title")
     }
 }
