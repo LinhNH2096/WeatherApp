@@ -14,7 +14,7 @@ struct WeatherButtonView: View {
             .frame(width: 280, height: 56)
             .background(Color.blue)
             .foregroundColor(Color.white)
-            .font(.system(size: 20, weight: .bold, design: .rounded))
+            .font(.system(size: 20, weight: .semibold, design: .rounded))
             .cornerRadius(12)
     }
 }
